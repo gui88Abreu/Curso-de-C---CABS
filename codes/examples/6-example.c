@@ -24,7 +24,7 @@ typedef struct Image_ppm_format ppm_img;
 
 /*----------Declaracoes de prototipos de funcoes----------*/
 int open_img(char *arqEntrada, int img[][MAX][MAX], int *width, int *height, int *Imax);
-void save_img(char *, int img[][MAX][MAX], int, int, int);
+void save_img(char *file_name, int img[][MAX][MAX], int width, int height, int Imax);
 void not_img(ppm_img *input, ppm_img *output);
 void blur_img(ppm_img *input, ppm_img *output);
 
