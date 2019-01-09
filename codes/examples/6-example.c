@@ -25,7 +25,8 @@ typedef struct Image_ppm_format ppm_img;
 /*----------Declaracoes de prototipos de funcoes----------*/
 int open_img(char *arqEntrada, int img[][MAX][MAX], int *width, int *height, int *Imax);
 void save_img(char *, int img[][MAX][MAX], int, int, int);
-void blur_img(int input_img[][MAX][MAX], int output_img[][MAX][MAX]);
+void not_img(ppm_img *input, ppm_img *output);
+void blur_img(ppm_img *input, ppm_img *output);
 
 int main(int argc, char **argv)
 {
@@ -34,7 +35,7 @@ int main(int argc, char **argv)
   output_img.name = argv[2];
 
   open_img(input_img.name, input_img.array, &input_img.width, &input_img.height, &input_img.Imax);
-  blur_img(input_img.array, output_img.array);
+  not_img(&input_img, &output_img);
   save_img(output_img.name, output_img.array, input_img.width, input_img.height, input_img.Imax);
   return 0;
 }
@@ -101,14 +102,21 @@ void save_img(char *arqSaida, int img[][MAX][MAX], int width, int height, int Im
   }
 }
 
+void not_img(ppm_img *input, ppm_img *output){
+  for (int i =0; i < input->height; i++){
+    for (int j = 0; j < input->width; j++){
+      output->array[0][i][j] = input->Imax - input->array[0][i][j];
+      output->array[1][i][j] = input->Imax - input->array[1][i][j];
+      output->array[2][i][j] = input->Imax - input->array[2][i][j];
+    }
+  }
+
+  return;
+}
+
 
 /*Implemente uma funcao que borre uma imagem.*/
-void blur_img(int input_img[][MAX][MAX], int output_img[][MAX][MAX]){
-  /*
-  *
-  * Apply blur
-  * 
-  */
+void blur_img(ppm_img *input, ppm_img *output){
   
   return;
 }
