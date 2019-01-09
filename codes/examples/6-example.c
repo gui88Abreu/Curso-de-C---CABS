@@ -1,41 +1,114 @@
 /*----------Importacao de bibliotecas----------*/
+#include <stdlib.h>
 #include <stdio.h>
-#include <string.h> /*strlen*/
-
-/*----------Definicao de estruturas e novos tipos de dados----------*/
 
 
 
 /*----------Definicao de constantes e variaveis globais----------*/
+#define MAX 128
+
+
+
+/*----------Definicao de estruturas e novos tipos de dados----------*/
+struct Image_ppm_format{
+  int Imax;
+  int width;
+  int height;
+  int array[3][MAX][MAX];
+  char *name;
+};
+
+typedef struct Image_ppm_format ppm_img;
 
 
 
 /*----------Declaracoes de prototipos de funcoes----------*/
-void funcao(char *, char *);
+int open_img(char *arqEntrada, int img[][MAX][MAX], int *width, int *height, int *Imax);
+void save_img(char *, int img[][MAX][MAX], int, int, int);
+void blur_img(int input_img[][MAX][MAX], int output_img[][MAX][MAX]);
 
-
-int main()
+int main(int argc, char **argv)
 {
-  char input[30], output[30];
-  int len;
+  ppm_img input_img, output_img;
+  input_img.name = argv[1];
+  output_img.name = argv[2];
 
-  printf("INPUT: ");
-  scanf("%[^\n]s", input); /*Recebe uma sequencia de caracteres ate encontrar uma quebra de linha*/
-
-  funcao(input, output);
-  printf("OUTPUT: %s\n", output);
-
+  open_img(input_img.name, input_img.array, &input_img.width, &input_img.height, &input_img.Imax);
+  blur_img(input_img.array, output_img.array);
+  save_img(output_img.name, output_img.array, input_img.width, input_img.height, input_img.Imax);
   return 0;
 }
 
 
 /*----------Implementacao das funcoes declaradas acima----------*/
-void funcao(char *input, char *output){
-  int len = strlen(input);
-  
-  for (int i = 0, j = len -1; i < len; i++, j--){
-    output[i] = input[j];
+int open_img(char *arqEntrada, int img[][MAX][MAX], int *width, int *height, int *Imax){
+  FILE *p;
+  int i = 0, j = 0, ok = 0;/*ok verifica se foi lido a quantidade correta de valores da imagem */
+  char type[3];/*variável que armazena o tipo de arquivo que foi aberto, ASCII ou binario*/
+
+  p = fopen(arqEntrada, "r");
+
+  if (p!=NULL){
+
+    fscanf(p,"%s %d %d %d", type, width, height, Imax);/*width e height são as variáveis que armazenam a largura e altura da imagem*/
+                                                          /*Imax é o valor máximo de cada pixel da imagem*/
+    while (fscanf(p,"%d %d %d", &img[0][i][j], &img[1][i][j], &img[2][i][j])!=EOF){
+
+      j++;
+
+      if (j == *width){/*Caso o programa já tenha lido a linha inteira da imagem, ele pula para a outra*/
+        j = 0;
+        i++;
+      }
+
+    }
+
+    fclose(p);
+
+    if (i == *height)
+      ok = 1;
+
+  }
+  else{
+    printf("\nERRO ao abrir o arquivo %s\n", arqEntrada);
   }
 
+  return ok;
+}
+
+void save_img(char *arqSaida, int img[][MAX][MAX], int width, int height, int Imax){
+  FILE *p;
+  int i,j;
+
+  p = fopen(arqSaida, "w");
+
+  if (p!=NULL){
+      
+    fprintf(p, "P3\n%d %d\n%d\n", width, height, Imax);
+
+    for(i=0; i<height; i++){
+      for (j=0;j<width; j++){
+        fprintf(p, "%d %d %d ", img[0][i][j], img[1][i][j], img[2][i][j]);
+        if (j == width -1)
+          fprintf(p, "\n");
+      }
+    }
+
+    fclose(p);
+  }
+  else{
+    printf("\n\nERRO ao abrir arquivo %s no modo escrita\n\n",arqSaida);
+  }
+}
+
+
+/*Implemente uma funcao que borre uma imagem.*/
+void blur_img(int input_img[][MAX][MAX], int output_img[][MAX][MAX]){
+  /*
+  *
+  * Apply blur
+  * 
+  */
+  
   return;
 }
