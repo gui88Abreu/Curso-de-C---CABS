@@ -2,11 +2,11 @@
 
 
 
-/*----------Definicao de estruturas e novos tipos de dados----------*/
-
-
-
 /*----------Definicao de constantes e variaveis globais----------*/
+
+
+
+/*----------Definicao de estruturas e novos tipos de dados----------*/
 
 
 
